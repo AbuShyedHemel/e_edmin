@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_edmin/Pages/add_prodict.dart';
 import 'package:flutter/material.dart';
 import 'package:e_edmin/databse/brand.dart';
 import 'package:e_edmin/databse/catagory.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:convert';
 
 class Management extends StatefulWidget {
   @override
@@ -15,6 +18,16 @@ class _ManagementState extends State<Management> {
   GlobalKey<FormState> _brandformKey = GlobalKey();
   BrandService _brandService = BrandService();
   CatagoryService _catagoryService = CatagoryService();
+  List<DocumentSnapshot> brands = [];
+  List<DocumentSnapshot> catagories = [];
+  List<DropdownMenuItem<String>> catagoriesDropDown =
+      <DropdownMenuItem<String>>[];
+  String _currentCatagory;
+  String _currentBrand;
+
+ 
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +38,10 @@ class _ManagementState extends State<Management> {
           ListTile(
             leading: Icon(Icons.add),
             title: Text("Add product"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => AddProduct()));
+            },
           ),
           Divider(),
           ListTile(
@@ -88,12 +104,13 @@ class _ManagementState extends State<Management> {
                 _catagoryService.creatCatagory(catagoryController.text);
               }
               Fluttertoast.showToast(msg: "Catagory Created");
-              
             },
-            child: Text("add")),
-        FlatButton(onPressed: () {
-          Navigator.pop(context);
-        }, child: Text("Cancle"))
+            child: Text("Add")),
+        FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Cancle"))
       ],
     );
     showDialog(context: context, builder: (_) => alert);
@@ -109,7 +126,7 @@ class _ManagementState extends State<Management> {
               return "Brand cannot be empty";
             }
           },
-          controller: catagoryController,
+          controller: brandController,
           decoration: InputDecoration(hintText: "Add Brand"),
         ),
       ),
@@ -117,17 +134,20 @@ class _ManagementState extends State<Management> {
         FlatButton(
             onPressed: () {
               if (brandController.text != null) {
-                _brandService.creatBrands(brandController.text);
+                _brandService.createBrand(brandController.text);
               }
               Fluttertoast.showToast(msg: "Brand Created");
-              
             },
-            child: Text("add")),
-        FlatButton(onPressed: () {
-          Navigator.pop(context);
-        }, child: Text("Cancle"))
+            child: Text("Add")),
+        FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Cancle"))
       ],
     );
     showDialog(context: context, builder: (_) => alert);
   }
+
+
 }
